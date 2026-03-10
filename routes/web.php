@@ -13,7 +13,6 @@ Route::get('/create-admin', function () {
         'email' => 'admin@gmail.com',
         'password' => Hash::make('123456')
     ]);
-
     return "Admin created!";
 });
 
