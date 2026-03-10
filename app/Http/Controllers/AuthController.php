@@ -15,20 +15,22 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
-    {
-        $admin = Admin::where('email' ,$request->email)->first();
+   public function login(Request $request)
+{
+    $admin = Admin::where('email', $request->email)->first();
 
-        if($admin && Hash::check($request->password, $admin->password)){
+    if($admin && $request->password == $admin->password){
 
-             session([
-                'admin_id' => $admin->id,
-                'admin_name' => $admin->name
-            ]);
-            return "Login successful";
-        }
-        return back()->with('error', 'Invalid login credentials');
+        session([
+            'admin_id' => $admin->id,
+            'admin_name' => $admin->name
+        ]);
+
+        return "Login successful";
     }
+
+    return back()->with('error', 'Invalid login credentials');
+}
     public function logout()
     {
         session::forget('admin_id');
