@@ -158,7 +158,7 @@
 
                     <td >
                         <div class="d-flex gap-2">
-                            <a href="{{ route('cases.show', ['id' => $case->id, 'page' => request()->page]) }}"class="btn btn-outline-warning btn-sm">View</a>
+                            <a href="{{ route('cases.show', ['case' => $case->id, 'page' => request()->page]) }}" class="btn btn-outline-warning">Views</a>
                             <a href="{{ route('cases.edit', ['case' => $case->id, 'page' => request()->page,'search' => request('search')]) }}" class="btn btn-outline-info btn-sm">Edit</a>                              <!-- <form action="{{ route('cases.destroy', $case->id)}}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
