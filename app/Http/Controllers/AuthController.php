@@ -25,7 +25,7 @@ class AuthController extends Controller
                 'admin_id' => $admin->id,
                 'admin_name' => $admin->name
             ]);
-            return redirect()->route('cases.index');
+            return "Login successful";
         }
         return back()->with('error', 'Invalid login credentials');
     }
