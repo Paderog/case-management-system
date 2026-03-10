@@ -54,7 +54,7 @@
         }
 
         .statue{
-            height: 650px;
+            height: 670px;
             margin-top: -150px;
             margin-right: -110px;
         }
