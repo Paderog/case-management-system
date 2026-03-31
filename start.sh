@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+
 php artisan migrate --force
 php artisan db:seed --force
 apache2-foreground
