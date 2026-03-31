@@ -30,21 +30,21 @@ class HomeController extends Controller
                 ->count();
 
             $months = [
-                1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',
-                5=>'May',6=>'Jun',7=>'Jul',8=>'Aug',
-                9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec'
+                1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
+                5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug',
+                9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec'
             ];
 
-            // ✅ FIX: NO whereYear
-            $cases = Cases::selectRaw('MONTH(date_filed) as month, COUNT(*) as total')
+            $cases = Cases::selectRaw('EXTRACT(MONTH FROM date_filed) as month, COUNT(*) as total')
                 ->where('year_id', $year->id)
                 ->whereNotNull('date_filed')
-                ->groupBy('month')
+                ->groupByRaw('EXTRACT(MONTH FROM date_filed)')
                 ->pluck('total', 'month');
 
             $casesPerMonth = [];
 
             foreach ($cases as $m => $total) {
+                $m = (int) $m;
                 if (isset($months[$m])) {
                     $casesPerMonth[$months[$m]] = $total;
                 }
@@ -52,17 +52,16 @@ class HomeController extends Controller
 
             $year->casesPerMonth = $casesPerMonth;
 
-
-            // ✅ FIX: NO whereYear
-            $updates = Cases::selectRaw('MONTH(latest_date_of_entry) as month, COUNT(*) as total')
+            $updates = Cases::selectRaw('EXTRACT(MONTH FROM latest_date_of_entry) as month, COUNT(*) as total')
                 ->where('year_id', $year->id)
                 ->whereNotNull('latest_date_of_entry')
-                ->groupBy('month')
+                ->groupByRaw('EXTRACT(MONTH FROM latest_date_of_entry)')
                 ->pluck('total', 'month');
 
             $casesUpdatedPerMonth = [];
 
             foreach ($updates as $m => $total) {
+                $m = (int) $m;
                 if (isset($months[$m])) {
                     $casesUpdatedPerMonth[$months[$m]] = $total;
                 }
