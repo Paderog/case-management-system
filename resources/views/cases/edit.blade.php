@@ -16,8 +16,7 @@
 
                             <input type="hidden" name="page" value="{{ request('page') }}">
                             <input type="hidden" name="search" value="{{ request('search') }}">
-
-                            <input type="hidden" name="page" value="{{ request('page') }}">
+                            
                             <div class="mb-3">
                                 <label class="form-label">FY2026</label>
                                 <input type="text" 
@@ -58,7 +57,7 @@
                                     <div class="invalid-feedback">{{$message}}</div>
                                 @enderror
                             </div>
-                            <a href="{{ route('cases.index', ['page' => request('page')]) }}" class="btn btn-outline-warning">Back</a>
+                            <a href="{{ route('cases.year', ['year' => $case->year_id, 'page' => request('page', 1), 'search' => request('search')]) }}" class="btn btn-outline-warning">Back</a>
                             <button type="submit" class="btn btn-outline-success text-white">Update</button> 
                         </form>
                     </div>

@@ -14,21 +14,23 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 @endsession
-
                 <div class="card bg-dark text-white mt-4">
                     <div class="card-body border boder-light rounded">
-                        <form action="{{ route('cases.store')}}" method="POST">
+                        <form action="{{ route('cases.store', $yearData->id) }}" method="POST">
+                            <input type="hidden" name="year_id" value="{{ $yearData->id }}">
                             @csrf
-                            <div class="mb-3">
-                                <label class="form-label">FY2026</label>
-                                <input type="text" 
-                                name="title"
-                                class="form-control bg-dark text-white @error('title') is-invalid @enderror"
-                                value="{{old('title')}}">
-                                @error('title')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                @enderror
-                            </div>
+                           <div class="mb-3">
+                              <label class="form-label">
+                                 {{ $yearData->year ?? 'Fiscal Year' }}
+                                </label>
+                                 <input type="text" 
+                                   name="title"
+                                    class="form-control form-control-lg bg-dark text-white @error('title') is-invalid @enderror"
+                                     value="{{ old('title') }}">
+                                      @error('title')
+                                      <div class="invalid-feedback">{{ $message }}</div>
+                                       @enderror
+                                    </div>
                             <div class="mb-3">
                                 <label class="form-label">Date Filed</label>
                                 <input type="date" 
@@ -40,10 +42,10 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Status</label>
+                                <label class="form-label">ACTION TAKEN/REMARKS</label>
                                 <input type="text" 
                                 name="status"
-                                class="form-control bg-dark text-white @error('status') is-invalid @enderror"
+                                class="form-control form-control-lg bg-dark text-white @error('status') is-invalid @enderror"
                                 value="{{old('status')}}">
                                 @error('status')
                                     <div class="invalid-feedback">{{$message}}</div>
@@ -59,7 +61,7 @@
                                     <div class="invalid-feedback">{{$message}}</div>
                                 @enderror
                             </div>
-                            <a href="{{ route('cases.index', ['page' => request('page')]) }}" class="btn btn-outline-warning">Back</a>
+                            <a href="{{ route('cases.year', $yearData->id) }}" class="btn btn-outline-warning">Back</a>
                             <button type="submit" class="btn btn-outline-success text-white">Save</button> 
                         </form>
                     </div>

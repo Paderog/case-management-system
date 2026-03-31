@@ -2,22 +2,28 @@
 
 @section('title', 'Cases List')
 @section('content')
+
+
 <div class="container mt-4">
-    <h2 class="mb-4 text-white">Cases List</h2>
+    <h2 class="mb-4 text-white">
+       Cases List - {{ $yearData->year ?? 'FY2025' }}
+    </h2>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
 
         {{-- LEFT SIDE --}}
-        <a href="{{ route('cases.create') }}" class="btn btn-outline-info">
-            Add Cases
-        </a>
+        @if(isset($yearData))
+            <a href="{{ route('cases.create', $yearData->id) }}" class="btn btn-outline-info">
+                Add Cases
+            </a>
+        @endif
 
         {{-- RIGHT SIDE --}}
-        <form method="GET" action="{{ route('cases.index') }}" class="d-flex">
+        <form method="GET" action="{{ url()->current() }}" class="d-flex">
             <input type="text"
                 id="search-input"
                 name="search"
-                value="{{ request('search') }}"
+                value="{{ request()->query('search', '') }}"
                 class="form-control me-2"
                 placeholder="Search title or status..."
                 style="width: 300px;">
@@ -51,7 +57,7 @@
         <div class="card bg-dark border-warning text-center text-white">
             <div class="card-body">
                 <h6>NO ENTRY YET</h6>
-                <h3>{{ $noEntry }}</h3>
+                <h3>{{ $noEntryYet }}</h3>
             </div>
         </div>
     </div>
@@ -117,12 +123,14 @@
         @endphp
 
         <table id="casesTable" class="table table-bordered table-dark table-striped">
-            <thead> {{-- FIXED thred -> thead --}}
+            <thead>
                 <tr>
                     <th class="text-center py-4 px-5" style="width:5%">#</th>
-                    <th class="text-center py-4 px-5" style="width:40%">FY2026</th>
+                    <th class="text-center py-4 px-5" style="width:40%">
+                    {{ isset($yearData) ? $yearData->year : 'Fiscal Year' }}
+                    </th>
                     <th class="text-center py-3 px-4" style="width:15%">DATE FILED</th>
-                    <th class="text-center py-4 px-5" style="width:20%">STATUS</th>
+                    <th class="text-center py-4 px-5" style="width:20%">ACTION TAKEN/REMARKS</th>
                     <th class="text-center py-3 px-4" style="width:15%">LATEST DATE OF ENTRY</th>
                     <th class="text-center py-4 px-5" style="width:10%">ACTIONS</th>
                 </tr>
@@ -158,8 +166,9 @@
 
                     <td >
                         <div class="d-flex gap-2">
-                            <a href="{{ route('cases.show', ['case' => $case->id, 'page' => request()->page]) }}" class="btn btn-outline-warning">Views</a>
-                            <a href="{{ route('cases.edit', ['case' => $case->id, 'page' => request()->page,'search' => request('search')]) }}" class="btn btn-outline-info btn-sm">Edit</a>                              <!-- <form action="{{ route('cases.destroy', $case->id)}}" method="POST" class="d-inline">
+                            <a href="{{ route('cases.show', ['case' => $case->id, 'page' => request()->page, 'search' => request('search')]) }}"  class="btn btn-outline-warning">Views</a>
+                            <a href="{{ route('cases.edit', ['case' => $case->id, 'page' => request()->page,'search' => request('search')]) }}" class="btn btn-outline-info btn-sm">Edit</a>                           
+                               <!-- <form action="{{ route('cases.destroy', $case->id)}}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-outline-danger"
@@ -167,14 +176,16 @@
                                 >Delete</button>
                             </form> -->
 
-              <button type="button" 
-                    class="btn btn-outline-danger delete-btn"
-                    data-bs-toggle="modal"
-                    data-bs-target="#deleteCaseModal"
-                    data-id="{{ $case->id }}"
-                    data-page="{{ request()->page }}">
-                    Delete
-             </button>
+                        <button type="button" 
+                            class="btn btn-outline-danger delete-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteCaseModal"
+                            data-id="{{ $case->id }}"
+                            data-url="{{ route('cases.destroy', $case->id) }}"
+                            data-page="{{ request('page', 1) }}"
+                            data-search="{{ request('search') }}">
+                            Delete
+                        </button>
                         </div>
                     </td>
                 </tr>
@@ -211,7 +222,7 @@
             if(searchInput){
                 searchInput.addEventListener("input", function () {
                     if (this.value.trim() === "") {
-                        window.location.href = "{{ route('cases.index') }}";
+                        window.location.href = "{{ route('cases.year', $yearData->id) }}";
                     }
                 });
             }
@@ -315,11 +326,13 @@
             <form id="deleteForm" method="POST">
                 @csrf
                 @method('DELETE')
+
+                <input type="hidden" name="page" id="deletePage">
+                <input type="hidden" name="search" id="deleteSearch">
+
                 <button type="submit" class="btn btn-danger">
                     Delete Case
                 </button>
-
-                <input type="hidden" name="page" value="{{ request('page') }}">
             </form>
             </div>
         </div>
@@ -328,6 +341,28 @@
 
 @endsection
 @section('script')
+
+<script id="m38dxq">
+document.addEventListener('DOMContentLoaded', function () {
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    const deleteForm = document.getElementById('deleteForm');
+    const deletePage = document.getElementById('deletePage');
+    const deleteSearch = document.getElementById('deleteSearch');
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const deleteUrl = this.getAttribute('data-url');
+            const page = this.getAttribute('data-page');
+            const search = this.getAttribute('data-search');
+
+            deleteForm.action = deleteUrl;
+            deletePage.value = page;
+            deleteSearch.value = search;
+        });
+    });
+});
+</script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 
@@ -444,8 +479,25 @@ new Chart(updateCtx, {
 });
 
 }
-
 </script>
-        
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const deleteButtons = document.querySelectorAll(".delete-btn");
+    const deleteForm = document.getElementById("deleteCaseForm");
+
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", function () {
+
+            let caseId = this.getAttribute("data-id");
+
+            deleteForm.action = "/cases/" + caseId;
+
+        });
+    });
+
+});
+</script>
 
 @endsection

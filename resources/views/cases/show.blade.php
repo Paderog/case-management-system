@@ -12,7 +12,7 @@
                     <p class="card-date"><strong>Date Filed:</strong> {{ $case->date_filed->format('j-M-Y')}} </p>
                     <p class="card-text"><strong>Status:</strong> {{ $case->status}} </p>
                     <p class="card-date"><strong>Latest Date of Entry:</strong> {{ $case->latest_date_of_entry ? $case->latest_date_of_entry->format('j-M-Y') : 'No Entry Yet' }}</p>
-                    <a href="{{ route('cases.index', ['page' => request('page')]) }}" class="btn btn-secondary btn-sm">Back to List</a>
+                    <a href="{{ route('cases.year', ['year' => $case->year_id, 'page' => request('page', 1), 'search' => request('search')]) }}" class="btn btn-secondary btn-sm">Back to List</a>
                 </div>
             </div>
         </div>

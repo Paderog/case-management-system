@@ -19,14 +19,14 @@ class AuthController extends Controller
 {
     $admin = Admin::where('email', $request->email)->first();
 
-    if($admin && $request->password == $admin->password){
+    if($admin && Hash::check($request->password, $admin->password)){
 
         session([
             'admin_id' => $admin->id,
             'admin_name' => $admin->name
         ]);
 
-       return redirect()->route('cases.index');
+        return redirect()->route('dashboard');
     }
 
     return back()->with('error', 'Invalid login credentials');
