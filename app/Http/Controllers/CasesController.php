@@ -168,30 +168,29 @@ class CasesController extends Controller
         }
     public function byYear(Request $request, $year)
         {
-            
             $yearData = FiscalYear::findOrFail($year);
-            // ✅ START QUERY
+
             $query = Cases::where('year_id', $year);
 
-            // ✅ SEARCH FUNCTION
             $search = trim($request->query('search', ''));
 
             if ($search !== '') {
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', '%' . $search . '%')
                     ->orWhere('status', 'like', '%' . $search . '%');
-            });
-        }
-            // ✅ FINAL CASES RESULT
+                });
+            }
+
             $cases = $query->orderByDesc('created_at')
-                        ->paginate(20)
-                        ->withQueryString();
+                ->paginate(20)
+                ->withQueryString();
+
             $totalCases = Cases::where('year_id', $year)->count();
 
             $casesThisMonth = Cases::where('year_id', $year)
-            ->whereMonth('date_filed', now()->month)
-            ->whereYear('date_filed', now()->year)
-            ->count();
+                ->whereMonth('date_filed', now()->month)
+                ->whereYear('date_filed', now()->year)
+                ->count();
 
             $noEntryYet = Cases::where('year_id', $year)
                 ->whereNull('latest_date_of_entry')
@@ -201,34 +200,41 @@ class CasesController extends Controller
                 ->whereNotNull('latest_date_of_entry')
                 ->count();
 
-            // CASES PER MONTH
-            $casesPerMonth = Cases::selectRaw('MONTH(date_filed) as month, COUNT(*) as total')
-                ->where('year_id', $year)
-                ->groupBy('month')
-                ->orderBy('month')
-                ->pluck('total','month');
-
             $months = [
-                1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',
-                5=>'May',6=>'Jun',7=>'Jul',8=>'Aug',
-                9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec'
+                1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
+                5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug',
+                9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec'
             ];
 
-            $casesPerMonth = $casesPerMonth->mapWithKeys(function ($value, $key) use ($months) {
-                return [$months[$key] => $value];
-            });
+            $rawCasesPerMonth = Cases::selectRaw('EXTRACT(MONTH FROM date_filed) as month, COUNT(*) as total')
+                ->where('year_id', $year)
+                ->whereNotNull('date_filed')
+                ->groupByRaw('EXTRACT(MONTH FROM date_filed)')
+                ->orderByRaw('EXTRACT(MONTH FROM date_filed)')
+                ->pluck('total', 'month');
 
-            // UPDATED CASES PER MONTH
-            $casesUpdatedPerMonth = Cases::selectRaw('MONTH(latest_date_of_entry) as month, COUNT(*) as total')
+            $casesPerMonth = collect();
+            foreach ($rawCasesPerMonth as $key => $value) {
+                $monthNumber = (int) $key;
+                if (isset($months[$monthNumber])) {
+                    $casesPerMonth[$months[$monthNumber]] = $value;
+                }
+            }
+
+            $rawCasesUpdatedPerMonth = Cases::selectRaw('EXTRACT(MONTH FROM latest_date_of_entry) as month, COUNT(*) as total')
                 ->where('year_id', $year)
                 ->whereNotNull('latest_date_of_entry')
-                ->groupBy('month')
-                ->orderBy('month')
-                ->pluck('total','month');
+                ->groupByRaw('EXTRACT(MONTH FROM latest_date_of_entry)')
+                ->orderByRaw('EXTRACT(MONTH FROM latest_date_of_entry)')
+                ->pluck('total', 'month');
 
-            $casesUpdatedPerMonth = $casesUpdatedPerMonth->mapWithKeys(function ($value, $key) use ($months) {
-                return [$months[$key] => $value];
-            });
+            $casesUpdatedPerMonth = collect();
+            foreach ($rawCasesUpdatedPerMonth as $key => $value) {
+                $monthNumber = (int) $key;
+                if (isset($months[$monthNumber])) {
+                    $casesUpdatedPerMonth[$months[$monthNumber]] = $value;
+                }
+            }
 
             return view('cases.index', compact(
                 'cases',
