@@ -10,41 +10,32 @@
         body{
             background: #f7f4ef;
             font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
         }
+
         .navbar{
             background: white;
             padding: 20px 60px;
         }
+
         .navbar-brand{
             font-weight: 700;
         }
+
         .hero{
-            padding: 120px 60px;
-            min-height: 650px;
+            padding: 40px 60px;
         }
-        .hero h1{
-            font-size: 80px;
-            font-weight: 700;
-        }
-        .hero span{
-            color: #c8a26b;
-        }
-        .hero p{
-            color: #666;
-            max-width: 500px;
-            font-size: 20px;
-        }
-        .hero-btn{
-            background: #c8a26b;
-            border: none;
-            padding: 12px 25px;
-            color: white;
-            border-radius: 8px;
-        }
+
         .hero-img{
-            display: flex;
-            justify-content: flex-end;
+            background-image: url('{{ asset("image/deped-logo.jpg") }}');
+            background-size: 65%;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: calc(100vh - 120px);
+            width: 100%;
+            border-radius: 12px;
         }
+
         .call-btn{
             background: #222;
             color: white;
@@ -53,146 +44,73 @@
             text-decoration: none;
         }
 
-        .statue{
-            height: 670px;
-            margin-top: -150px;
-            margin-right: -110px;
+        .navbar a{
+            text-decoration: none;
+            color: #c8a26b;
+            font-weight: 500;
+            margin: 0 15px;
+            font-size: 20px;
         }
-        .hero .row{
-            position: relative;
+
+        .navbar a:hover{
+            color: #444;
         }
+
         html{
             scroll-behavior: smooth;
         }
-    .navbar a{
-        text-decoration: none;
-        color: #c8a26b;
-        font-weight: 500;
-        margin: 0 15px;
-        font-size: 20px;
-    }
+        .navbar-brand{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    .navbar a:hover{
-        color: #444;
-    }
+        .deped-logo{
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+        }
 
-    .info-box{
-        border: 3px solid #222;
-        padding: 30px;
-        margin-bottom: 30px;
-        background: #f7f4ef;
-    }
+        .brand-text{
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
 
-    .box-image{
-        width: 120px;
-    }
-    
+        .brand-title{
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .brand-subtitle{
+            font-size: 14px;
+            font-weight: 600;
+            color: #444;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar d-flex justify-content-between">
-        <div class="navbar-brand">
-            LEGAL UNIT
+    <nav class="navbar d-flex justify-content-between align-items-center">
+        <div class="navbar-brand d-flex align-items-center">
+            <img src="{{ asset('image/deped-2.png') }}" alt="DepEd Logo" class="deped-logo">
+
+            <div class="brand-text">
+                <div class="brand-title">Department of Education</div>
+                <div class="brand-subtitle">SCHOOLS DIVISION OF BUKIDNON</div>
+            </div>
         </div>
 
-        <!-- <div>
-            <a href="#about" class="me-4">About</a>
-            <a href="#services" class="me-4">Services</a>
-            <a href="#cases" class="me-4">Cases</a>
-            <a href="#practice" class="me-4">Practice</a>
-        </div> -->
-
         <div>
-            <a href="{{ route('login')}}" class="call-btn">
-                Login
-            </a>
+            <a href="{{ route('login')}}" class="call-btn">Login</a>
         </div>
     </nav>
 
-    <div class="hero container">
-    <div class="row align-items-start">
-
-        <div class="col-md-6">
-            <h1>
-                Unraveling <br>
-                Complexities <br>
-                <span>Together</span>
-            </h1>
-
-            <p>
-                Professional Legal Case Management System designed to organize,
-                track, and manage cases efficiently
-            </p>
-
-            <!-- <a href="{{ route('login')}}" class="hero-btn">Login</a> -->
-        </div>
-
-        <div class="col-md-6 hero-img">
-            <img src="{{ asset('image/ladyJustice.png')}}" class="statue">
+    <div class="hero container-fluid">
+        <div class="row">
+            <div class="col-md-12 hero-img"></div>
         </div>
     </div>
-</div>
-
-
-<!-- <section class="container py-5">
-
-    <div class="info-box row align-items-center">
-        <div class="col-md-8">
-            <h1>About us</h1>
-            <p>
-                The Legal Unit Case Management System is designed to streamline case tracking,
-                documentation, and legal workflows to ensure efficient management of legal matter.
-            </p>
-        </div>
-
-        <div class="col-md-4 text-end">
-            <img src="{{ asset('image/ladyStatueJustice.png') }}" class="box-image">
-        </div>
-    </div>
-
-    <div class="info-box row align-items-center">
-        <div class="col-md-8">
-            <h1>Services</h1>
-            <p>
-                Our system helps manage case records, monitor legal activities,
-                and organize documentation efficiently.
-            </p>
-        </div>
-
-        <div class="col-md-4 text-end">
-            <img src="{{ asset('image/ladyStatueJustice.png') }}" class="box-image">
-        </div>
-    </div>
-
-    <div class="info-box row align-items-center">
-        <div class="col-md-8">
-            <h1>Cases</h1>
-            <p>
-                Track ongoing cases, monitor their progress, and manage case
-                information in a structured system.
-            </p>
-        </div>
-
-        <div class="col-md-4 text-end">
-            <img src="{{ asset('image/ladyStatueJustice.png') }}" class="box-image">
-        </div>
-    </div>
-
-    <div class="info-box row align-items-center">
-        <div class="col-md-8">
-            <h1>Practice</h1>
-            <p>
-                The system supports various legal practices including documentation,
-                legal tracking, and administrative case handling.
-            </p>
-        </div>
-
-        <div class="col-md-4 text-end">
-            <img src="{{ asset('image/ladyStatueJustice.png') }}" class="box-image">
-        </div>
-    </div>
-
-</section>  -->
-
 </body>
 </html>

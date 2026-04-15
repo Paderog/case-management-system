@@ -174,6 +174,38 @@
             background:rgba(255,255,255,0.12);
             color:#fecaca;
         }
+        .sidebar-header{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 15px;
+        }
+
+        .deped-logo{
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+        }
+
+        .brand-text{
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .brand-title{
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .brand-subtitle{
+            font-size: 14px;
+            color: #bbb;
+            letter-spacing: 1px;
+        }
     </style>
 
     <title>
@@ -192,8 +224,13 @@
 <div class="d-flex">
 
     <div class="sidebar">
-        <div class="sidebar-logo">
-            LEGAL UNIT
+        <div class="sidebar-header">
+            <img src="{{ asset('image/deped-2.png') }}" alt="DepEd Logo" class="deped-logo">
+
+            <div class="brand-text">
+                <div class="brand-title">Department of Education</div>
+                <div class="brand-subtitle">SCHOOLS DIVISION OF BUKIDNON</div>
+            </div>
         </div>
 
         <div class="sidebar-menu">
@@ -274,7 +311,7 @@
 
         </div>
 
-        <a href="{{ route('logout') }}" class="sidebar-item sidebar-logout">
+        <a href="{{ route('home') }}" class="sidebar-item sidebar-logout">
             🚪 Logout
         </a>
     </div>
