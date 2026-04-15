@@ -12,10 +12,10 @@
         margin: 0;
         min-height: 100vh;
         background: linear-gradient(rgba(10,20,40,0.55), rgba(10,20,40,0.35)),
-        url("{{ asset('image/deped-logo.jpg') }}");
-        background-size: cover;
+        url("{{ asset('image/deped-3.jpg') }}");
+        background-size: contain;
         background-position: center;
-        background-repeat: no-repeat;
+        background-repeat: repeat;
         display: flex;
         align-items: center;
         justify-content: center;

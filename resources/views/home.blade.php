@@ -27,7 +27,7 @@
         }
 
         .hero-img{
-            background-image: url('{{ asset("image/deped-logo.jpg") }}');
+            background-image: url('{{ asset("image/deped-3.jpg") }}');
             background-size: 65%;
             background-position: center;
             background-repeat: no-repeat;
